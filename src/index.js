@@ -37,15 +37,14 @@ dispatcher.register((state, action) => {
   return state
 })
 
-dispatcher.dispatch({
-  type: 'rename',
-  payload: "Bar"
-})
-dispatcher.dispatch({
-  type: 'updateGreeting',
-  payload: "こんにちは"
-})
-dispatcher.dispatch({
-  type: 'rename',
-  payload: "BaBar"
-})
+const actionsCreator = (dispatcher) => {
+  return {
+    rename: (name) => dispatcher.dispatch({type: 'rename', payload: name}),
+    updateGreeting: (greeting) => dispatcher.dispatch({type: 'updateGreeting', payload: greeting})
+  }
+}
+const actions = actionsCreator(dispatcher)
+
+actions.rename('Bar')
+actions.updateGreeting('こんにちは')
+actions.rename('BaBar')
