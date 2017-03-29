@@ -12,5 +12,27 @@ class MyView extends View {
   }
 }
 const view = new MyView()
-view.setState({name: 'Foo'})
-view.setState({name: 'Bar'})
+
+const Dispatcher = require('./dispatcher')
+const dispatcher = new Dispatcher()
+
+const store = {
+  name: 'Foo'
+}
+dispatcher.connect(view, store)
+
+dispatcher.register((state, action) => {
+  if (action.type === 'rename') {
+    state.name = action.payload
+  }
+  return state
+})
+
+dispatcher.dispatch({
+  type: 'rename',
+  payload: "Bar"
+})
+dispatcher.dispatch({
+  type: 'rename',
+  payload: "BaBar"
+})
