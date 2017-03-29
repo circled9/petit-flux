@@ -3,10 +3,11 @@ const EventEmitter = require('eventemitter2').EventEmitter2
 class Dispatcher {
   constructor() {
     this._emitter = new EventEmitter()
+    this._reducers = []
   }
 
   register(reducer) {
-    this._reducer = reducer
+    this._reducers.push(reducer)
   }
 
   dispatch(action) {
@@ -14,10 +15,14 @@ class Dispatcher {
   }
 
   connect(view, state) {
-    view.setState(state)
+    this._state = state
+    view.setState(this._state)
+
     this._emitter.on('dispatch', action => {
-      const next = this._reducer(state, action)
-      view.setState(next)
+      this._reducers.forEach(reducer => {
+        this._state = reducer(this._state, action)
+      })
+      view.setState(this._state)
     })
   }
 }

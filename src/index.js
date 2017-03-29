@@ -3,12 +3,13 @@ class MyView extends View {
   constructor() {
     super()
     this.state = {
-      name: ''
+      name: '',
+      greeting: '',
     }
   }
 
   render() {
-    console.log(`Hello, ${this.state.name}`)
+    console.log(`${this.state.greeting} ${this.state.name}`)
   }
 }
 const view = new MyView()
@@ -17,7 +18,8 @@ const Dispatcher = require('./dispatcher')
 const dispatcher = new Dispatcher()
 
 const store = {
-  name: 'Foo'
+  name: 'Foo',
+  greeting: 'Hello',
 }
 dispatcher.connect(view, store)
 
@@ -28,9 +30,20 @@ dispatcher.register((state, action) => {
   return state
 })
 
+dispatcher.register((state, action) => {
+  if (action.type === 'updateGreeting') {
+    state.greeting = action.payload
+  }
+  return state
+})
+
 dispatcher.dispatch({
   type: 'rename',
   payload: "Bar"
+})
+dispatcher.dispatch({
+  type: 'updateGreeting',
+  payload: "こんにちは"
 })
 dispatcher.dispatch({
   type: 'rename',
